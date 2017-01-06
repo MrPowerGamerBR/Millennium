@@ -30,7 +30,7 @@ public class PostCreateView {
 					post.slug = Millennium.slg.slugify(req.queryParams("title"));
 					boolean sameSlug = Millennium.client.getDatabase("millennium").getCollection("posts").find(Filters.eq("slug", post.getSlug())).first() != null;
 					while (sameSlug) {
-						post.setSlug("-" + post.getSlug() + Millennium.rand.nextInt(1, 1000));
+						post.setSlug(post.getSlug() + "-" + Millennium.rand.nextInt(1, 1000));
 						sameSlug = Millennium.client.getDatabase("millennium").getCollection("posts").find(Filters.eq("slug", post.getSlug())).first() != null;
 					}
 					post.title = req.queryParams("title");
