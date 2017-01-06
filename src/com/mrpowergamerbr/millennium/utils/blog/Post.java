@@ -24,6 +24,8 @@ public class Post {
 	
 	public long date = System.currentTimeMillis(); // Data do post
 	
+	public int viewCount = 0; // Views
+	
 	@Transient
 	public transient Author author;
 	
