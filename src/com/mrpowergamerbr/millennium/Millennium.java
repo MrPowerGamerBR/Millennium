@@ -4,7 +4,9 @@ import static spark.Spark.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.SplittableRandom;
 
 import org.bson.Document;
 import org.mongodb.morphia.Datastore;
@@ -35,6 +37,8 @@ public class Millennium {
 	public static Morphia morphia;
 	public static Datastore datastore;
 	public static Slugify slg;
+	
+	public static final SplittableRandom rand = new SplittableRandom();
 	
 	public static void main(String[] args) {
 		FileLoader fl = new FileLoader();
@@ -129,5 +133,16 @@ public class Millennium {
 			posts.add(post);
 		}
 		return posts;
+	}
+	
+	public static HashSet<String> getAllTags() {
+		HashSet<String> tags = new HashSet<String>();
+		ArrayList<Post> posts = getAllPosts();
+		
+		for (Post post : posts) {
+			tags.addAll(post.tags);
+		}
+		
+		return tags;
 	}
 }

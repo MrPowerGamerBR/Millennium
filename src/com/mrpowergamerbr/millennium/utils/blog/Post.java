@@ -1,5 +1,8 @@
 package com.mrpowergamerbr.millennium.utils.blog;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -23,6 +26,9 @@ public class Post {
 	
 	@Indexed
 	public String slug; // Slug
+	
+	@Indexed
+	public HashSet<String> tags = new HashSet<String>();
 	
 	public long date = System.currentTimeMillis(); // Data do post
 	
