@@ -19,10 +19,10 @@ public class PostCreateView {
 	public static Object render(Request req, Response res) {
 		try {
 			HashMap<String, Object> context = new HashMap<String, Object>();
-			
+
 			System.out.println("Título: " + req.queryParams("title"));
 			System.out.println("Conteúdo: " + req.queryParams("postContent"));
-			
+
 			if (req.queryParams("title") != null) {
 				if (req.queryParams("postContent") != null) {
 					Post post = new Post();
@@ -30,9 +30,9 @@ public class PostCreateView {
 					post.content = req.queryParams("postContent");
 					post.slug = Millennium.slg.slugify(req.queryParams("title"));
 					boolean sameSlug = Millennium.client.getDatabase("millennium").getCollection("posts").find(Filters.eq("slug", post.getSlug())).first() != null;
-					
+
 					int idx = 0;
-					
+
 					while (sameSlug) {
 						if (idx > 100) {
 							post.setSlug(post.getSlug() + "-" + UUID.randomUUID().toString());
@@ -42,26 +42,28 @@ public class PostCreateView {
 						idx++;
 					}
 					post.title = req.queryParams("title");
-					
+
 					String strTags = req.queryParams("tags");
 					String[] split = strTags.split(", ");
-					
+
 					HashSet<String> tags = new HashSet<String>();
-					
+
 					for (String tag : split) {
-						tags.add(tag.trim());
+						if (!tag.trim().isEmpty()) {
+							tags.add(tag.trim());
+						}
 					}
-					
+
 					post.setTags(tags);
-					
+
 					Millennium.datastore.save(post);
-					
+
 					System.out.println("Post criado!");
 				}
 			}
-			
+
 			context.put("tags", Millennium.getAllTags());
-			
+
 			PebbleTemplate template = Millennium.engine.getTemplate("postcreate.html");
 
 			return new RenderWrapper(template, context);
