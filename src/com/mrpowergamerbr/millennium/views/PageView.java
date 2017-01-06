@@ -39,8 +39,8 @@ public class PageView {
 				context.put("post", Millennium.fillPost(post));
 
 				// Adicionar uma nova view somente se a última visualização foi a mais de 60m				
-				if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - post.getViewCache().getOrDefault(StrUtils.ip2mongo(req.ip()), 0L)) > 60) {
-					post.getViewCache().put(StrUtils.ip2mongo(req.ip()), System.currentTimeMillis());
+				if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - post.getViewCache().getOrDefault(StrUtils.ip2mongo(req.headers("X-Forwarded-For")), 0L)) > 60) {
+					post.getViewCache().put(StrUtils.ip2mongo(req.headers("X-Forwarded-For")), System.currentTimeMillis());
 					
 					post.setViewCount(post.getViewCount() + 1);
 					
