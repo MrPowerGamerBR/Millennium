@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
@@ -29,9 +30,16 @@ public class PostCreateView {
 					post.content = req.queryParams("postContent");
 					post.slug = Millennium.slg.slugify(req.queryParams("title"));
 					boolean sameSlug = Millennium.client.getDatabase("millennium").getCollection("posts").find(Filters.eq("slug", post.getSlug())).first() != null;
+					
+					int idx = 0;
+					
 					while (sameSlug) {
-						post.setSlug(post.getSlug() + "-" + Millennium.rand.nextInt(1, 1000));
+						if (idx > 100) {
+							post.setSlug(post.getSlug() + "-" + UUID.randomUUID().toString());
+						}
+						post.setSlug(post.getSlug() + "-" + Millennium.rand.nextInt(1, 10000));
 						sameSlug = Millennium.client.getDatabase("millennium").getCollection("posts").find(Filters.eq("slug", post.getSlug())).first() != null;
+						idx++;
 					}
 					post.title = req.queryParams("title");
 					
