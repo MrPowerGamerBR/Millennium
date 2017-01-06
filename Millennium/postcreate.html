@@ -1,0 +1,67 @@
+{% extends "admin.html" %}
+{% block content %}
+<style>
+html {
+    text-align: left;
+}
+
+.postWrapper {
+width: 73%;
+float: left;
+}
+
+.widgetWrapper {
+width: 25%;
+float: right;
+}
+
+.everything {
+width: 90%;
+margin: auto;
+}
+
+.topBar {
+text-align: center;
+}
+</style>
+<pre style="text-align: center;" style="millennium">
+ __  __ _ _ _                  _                 
+|  \/  (_) | | ___ _ __  _ __ (_)_   _ _ __ ___  
+| |\/| | | | |/ _ \ '_ \| '_ \| | | | | '_ ` _ \ 
+| |  | | | | |  __/ | | | | | | | |_| | | | | | |
+|_|  |_|_|_|_|\___|_| |_|_| |_|_|\__,_|_| |_| |_|
+</pre>
+<form method="post" class="pure-form">
+<div class="topBar">
+<input type="text" value="Olá Mundo!" placeholder="Isto não deve ficar vazio, sabia disso?" name="title"/>
+<input type="submit" value="Enviar"/>
+</div>
+<div class="everything">
+<div class="widgetWrapper">
+Marcadores:
+<input id="marcadores" type="text" value="" placeholder="Isto não deve ficar vazio, sabia disso?" name="tags"/>
+
+<div class="marcadoresBox">
+{% for tag in tags %}
+{% if loop.index != 0 %}, {% endif %}
+<a onclick="addTag('{{ tag }}')">{{ tag }}</a>{% endfor %}
+</div>
+<script>
+function addTag(str) {
+    elm = document.getElementById("marcadores");
+    elm.value = elm.value + str + ", ";
+}
+</script>
+</div>
+<div class="postWrapper">
+{% block postwrapper %}
+<textarea id="demo1" name="postContent" style="display: none;">
+# Olá Mundo!</textarea>
+</div>
+{% endblock %}
+</form>
+</div>
+<script>
+var simplemde = new SimpleMDE({ element: document.getElementById("demo1"), spellChecker: false});
+</script>
+{% endblock %}

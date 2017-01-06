@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>MrPowerGamerBR Website</title>
+		<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.0/build/pure-min.css">
+		<link rel="stylesheet" type="text/css" href="{{ websiteUrl }}style.css">
+    </head>
+	
+<script
+  src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+  integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.12/clipboard.min.js"></script>
+<script src="https://rawgit.com/HubSpot/tether/master/dist/js/tether.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" 
+integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/055e611427.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+<body>
+
+<div id="header">
+<img class="swingimage" src="https://4.bp.blogspot.com/-bvwGikhmeKI/V8GAnggJFxI/AAAAAAAAFyU/POCwAKcmPAM9-saBNg_tonG01BDhJYB1gCLcB/s1600/MrPowerGamerBR_Blog_Logo.png"></img>
+</div>
+<div id="everything">
+
+	<div id="navBar">
+	<div id="navBarWrapper">
+<div class="tabs">
+<a href="{{ websiteUrl }}"><i class="fa fa-home" style='line-height: 50px !important;'></i></a>
+</div>
+<div class="tabs">
+<a href="{{ websiteUrl }}votar"><i class="fa fa-magic"></i>  Plugins</a>
+</div>
+<div class="tabs">
+<a href="{{ websiteUrl }}equipe"><i class="fa fa-book"></i>  Tutoriais</a>
+</div>
+<div class="tabs">
+<a href="{{ websiteUrl }}stats"><i class="fa fa-plane"></i>  Sobre</a>
+</div>
+<div class="rightTab serverIp">
+<div class="toCopy" id="toCopy" data-clipboard-action="copy" data-clipboard-target="#toCopy">Busca</div>
+</div>
+</div>
+</div>
+<div id="underdog">
+{% block underdog %}
+<div id="rightContent">
+{% include "widgets/aboutMe.html" %}
+<br style="clear:both">
+</div>
+{% block content %}{% endblock %}
+{% endblock %}
+<br style="clear:both">
+</div>
+</div>
+</body>
+</html>

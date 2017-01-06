@@ -11,7 +11,6 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
-import com.mrpowergamerbr.millennium.utils.blog.Author;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 
 import spark.Request;
@@ -66,6 +65,8 @@ public class PostEditView {
 				context.put("post", post);
 			}
 
+			context.put("tags", Millennium.getAllTags());
+			
 			PebbleTemplate template = Millennium.engine.getTemplate("postedit.html");
 
 			return new RenderWrapper(template, context);

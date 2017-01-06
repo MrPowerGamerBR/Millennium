@@ -20,9 +20,6 @@ public class PostCreateView {
 		try {
 			HashMap<String, Object> context = new HashMap<String, Object>();
 
-			System.out.println("Título: " + req.queryParams("title"));
-			System.out.println("Conteúdo: " + req.queryParams("postContent"));
-
 			if (req.queryParams("title") != null) {
 				if (req.queryParams("postContent") != null) {
 					Post post = new Post();
@@ -57,8 +54,6 @@ public class PostCreateView {
 					post.setTags(tags);
 
 					Millennium.datastore.save(post);
-
-					System.out.println("Post criado!");
 				}
 			}
 

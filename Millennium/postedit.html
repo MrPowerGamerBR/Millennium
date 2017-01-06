@@ -1,0 +1,6 @@
+{% extends "postcreate.html" %}
+{% block postwrapper %}
+<textarea id="demo1" name="postContent" style="display: none;">
+{{ post.content }}</textarea>
+<input type="hidden" name="postId" value="{{ post.id }}">
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "admin.html" %}
+{% block content %}
+<style>
+html {
+    text-align: left;
+}
+
+html {
+font-family: "FixedsysExcelsior301Regular";
+color: #c0c0c0;
+background-color: black;
+font-size: 1em;
+}
+
+input {
+background-color: transparent;
+border: none;
+font-family: "FixedsysExcelsior301Regular";
+color: #c0c0c0;
+font-size: 1em;
+}
+</style>
+C:\Millennium\login.exe
+</br>
+DOS/4GW Protected Mode Run-time Version 1.97
+</br>
+Copyright (c) Rational Systems, Inc. 1990-1994
+</br>
+<pre>
+ __  __ _ _ _                  _                 
+|  \/  (_) | | ___ _ __  _ __ (_)_   _ _ __ ___  
+| |\/| | | | |/ _ \ '_ \| '_ \| | | | | '_ ` _ \ 
+| |  | | | | |  __/ | | | | | | | |_| | | | | | |
+|_|  |_|_|_|_|\___|_| |_|_| |_|_|\__,_|_| |_| |_|
+</pre>
+</br>                     
+{% if loggedInAs != null %}
+</br>
+Logged in as {{ loggedInAs }}
+</br>
+{% endif %}
+</br>
+<form method="post">
+Login: <input type="text" name="login">
+</br>
+Password: <input type="password" name="password">
+<input type="submit" 
+       style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+       tabindex="-1" />
+</form>
+{% if loginStatus == "FAIL" %}
+<span style="color: red;">Invalid Login/Password!</span>
+</br>
+<img src="http://vignette2.wikia.nocookie.net/undertale/images/d/dc/Bark.png/revision/latest?cb=20160302222655"></img>
+{% endif %}
+{% endblock %}
