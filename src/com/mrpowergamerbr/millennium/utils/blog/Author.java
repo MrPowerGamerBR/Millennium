@@ -13,6 +13,7 @@ import lombok.*;
 @Entity(value = "authors", noClassnameStored = true)
 public class Author {
 	@Id
+	@Indexed(options = @IndexOptions(unique = true))
 	public ObjectId id;
 	
 	@Indexed(options = @IndexOptions(unique = true))

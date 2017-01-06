@@ -44,8 +44,7 @@ public class HomeView {
 				HtmlRenderer renderer = HtmlRenderer.builder().build();
 				post.setHtmlContent(renderer.render(document));
 				
-				Author author = new Author();
-				author.setAuthorName("MrPowerGamerBR");
+				Author author = Millennium.datastore.get(Author.class, doc.get("authorId"));
 				
 				post.setAuthor(author);
 				
