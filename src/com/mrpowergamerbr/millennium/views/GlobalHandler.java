@@ -30,6 +30,8 @@ public class GlobalHandler {
 			render = HomeView.render(req, res);
 		} else if (path.startsWith("/admin")) {
 			render = AdminPanelView.render(req, res);
+		} else if (path.startsWith("/posts")) {
+			render = PostView.render(req, res);
 		}
 		
 		if(render instanceof RenderWrapper) {

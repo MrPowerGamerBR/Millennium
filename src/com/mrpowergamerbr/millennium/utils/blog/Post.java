@@ -3,6 +3,7 @@ package com.mrpowergamerbr.millennium.utils.blog;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Transient;
 
 import lombok.*;
@@ -20,6 +21,7 @@ public class Post {
 	
 	public String title; // Título do post
 	
+	@Indexed
 	public String slug; // Slug
 	
 	public long date = System.currentTimeMillis(); // Data do post
@@ -34,4 +36,7 @@ public class Post {
 	
 	@Transient
 	public transient String fancyDate;
+	
+	@Transient
+	public transient String smallDate;
 }

@@ -25,7 +25,7 @@ public class PostCreateView {
 					Post post = new Post();
 					post.authorId = req.session().attribute("loggedInId");
 					post.content = req.queryParams("postContent");
-					post.slug = "temporary";
+					post.slug = Millennium.slg.slugify(req.queryParams("title"));
 					post.title = req.queryParams("title");
 					
 					Millennium.datastore.save(post);
