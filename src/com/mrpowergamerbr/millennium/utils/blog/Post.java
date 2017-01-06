@@ -1,7 +1,9 @@
 package com.mrpowergamerbr.millennium.utils.blog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
@@ -33,6 +35,8 @@ public class Post {
 	public long date = System.currentTimeMillis(); // Data do post
 	
 	public int viewCount = 0; // Views
+	
+	public HashMap<String, Long> viewCache = new HashMap<String, Long>();
 	
 	@Transient
 	public transient Author author;

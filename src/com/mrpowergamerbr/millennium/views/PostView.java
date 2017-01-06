@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import org.bson.Document;
 
@@ -12,6 +13,7 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
+import com.mrpowergamerbr.millennium.utils.StrUtils;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 import spark.Request;
 import spark.Response;
@@ -21,24 +23,33 @@ public class PostView {
 	public static Object render(Request req, Response res) {
 		try {
 			HashMap<String, Object> context = new HashMap<String, Object>();
-			
+
 			String[] args = req.pathInfo().split("/");
 			// args[0] = ""
 			// args[1] = "posts"
 			// args[2] = "slug"
-			
+
 			String slug = args[2];
-			
+
 			Document doc = Millennium.client.getDatabase("millennium").getCollection("posts").find(Filters.eq("slug", slug)).first();
 
 			if (doc != null) {
 				Post post = Millennium.datastore.get(Post.class, doc.get("_id"));
-				
+
 				context.put("post", Millennium.fillPost(post));
+
+				// Adicionar uma nova view somente se a última visualização foi a mais de 60m				
+				if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - post.getViewCache().getOrDefault(StrUtils.ip2mongo(req.ip()), 0L)) > 60) {
+					post.getViewCache().put(StrUtils.ip2mongo(req.ip()), System.currentTimeMillis());
+					
+					post.setViewCount(post.getViewCount() + 1);
+					
+					Millennium.datastore.save(post);
+				}
 			} else {
-				
+
 			}
-			
+
 			PebbleTemplate template = Millennium.engine.getTemplate("post.html");
 
 			return new RenderWrapper(template, context);
