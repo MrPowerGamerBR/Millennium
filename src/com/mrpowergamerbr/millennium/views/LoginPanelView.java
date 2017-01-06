@@ -63,8 +63,9 @@ public class LoginPanelView {
 						context.put("loginStatus", "SUCCESS");
 
 						session.attribute("loggedInAs", author.authorName);
-
-						res.redirect(Millennium.websiteUrl);
+						session.attribute("loggedInId", author.id);
+						
+						res.redirect(Millennium.websiteUrl + "admin");
 					} else {
 						context.put("loginStatus", "FAIL");
 					}
