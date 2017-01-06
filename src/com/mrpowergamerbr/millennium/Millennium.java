@@ -30,8 +30,8 @@ import com.vladsch.flexmark.parser.Parser;
 import spark.Spark;
 
 public class Millennium {
-	public static final String rootFolder = "D:\\workspace\\Millennium\\Millennium\\";
-	public static final String websiteUrl = "http://127.0.0.1:4567/";
+	public static final String rootFolder = "/home/servers/millennium/root/";
+	public static final String websiteUrl = "http://mrpowergamerbr.com/";
 
 	public static PebbleEngine engine;
 	public static MongoClient client;
@@ -42,6 +42,8 @@ public class Millennium {
 	public static final SplittableRandom rand = new SplittableRandom();
 	
 	public static void main(String[] args) {
+		port(4568); // Spark will run on port 4568
+		
 		FileLoader fl = new FileLoader();
 		fl.setPrefix(rootFolder);
 		engine = new PebbleEngine.Builder().cacheActive(false).strictVariables(true).templateCache(null).loader(fl).build();
@@ -54,7 +56,15 @@ public class Millennium {
 		Spark.externalStaticFileLocation(rootFolder + "static");
 		get("*", (req, res) -> GlobalHandler.render(req, res));
 		post("*", (req, res) -> GlobalHandler.render(req, res));
+        Spark.exception(RuntimeException.class, (e, request, response) -> {
+            if(!request.pathInfo().contains("wsebchat")) {
+               response.status(404);
+               GlobalHandler.render(request, response);
+            }
 
+         });
+
+        
 		Scanner scanner = new Scanner(System.in);
 
 		while (true) {

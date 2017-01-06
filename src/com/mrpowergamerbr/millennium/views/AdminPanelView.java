@@ -41,9 +41,13 @@ public class AdminPanelView {
 					return PostCreateView.render(req, res);
 				} else if (req.pathInfo().startsWith("/admin/editpost")) {
 					return PostEditView.render(req, res);
+				} else if (req.pathInfo().startsWith("/admin/createpage")) {
+					return PageCreateView.render(req, res);
+				} else if (req.pathInfo().startsWith("/admin/editpage")) {
+					return PageEditView.render(req, res);
 				}
 			}
-			
+
 			long count = Millennium.client.getDatabase("millennium").getCollection("posts").count();
 
 			context.put("postsPublicados", count);

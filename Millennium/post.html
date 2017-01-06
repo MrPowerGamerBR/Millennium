@@ -6,8 +6,12 @@
 	<div>
 	{{ post.htmlContent | raw }}
 	</div>
-	{{ post.author.authorName }} {{ post.author.id }}
-	
+	<div class="postFooter">
+	<p>Publicado por {{ post.author.authorName }}</p>
+	<i class="fa fa-comments" aria-hidden="true"></i> <a href="{{ websiteUrl }}posts/{{ post.slug }}#disqus_thread">Link</a>
+	</div>
+	</div>
+<div class="leftContent">
 	<div id="disqus_thread"></div>
 <script>
 

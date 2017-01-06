@@ -38,6 +38,8 @@ public class GlobalHandler {
 			render = AdminPanelView.render(req, res);
 		} else if (path.startsWith("/posts")) {
 			render = PostView.render(req, res);
+		} else if (path.startsWith("/pages")) {
+			render = PageView.render(req, res);
 		}
 		
 		PebbleTemplate compiledTemplate;
@@ -69,8 +71,7 @@ public class GlobalHandler {
 			compiledTemplate = null;
 
 			try {
-				// compiledTemplate = SparklySunnyFunny.engine.getTemplate("404.html");
-				throw new PebbleException(null, "Whoops!");
+				compiledTemplate = Millennium.engine.getTemplate("404.html");
 			} catch (PebbleException var14) {
 				var14.printStackTrace();
 			}
