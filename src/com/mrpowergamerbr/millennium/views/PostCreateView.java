@@ -54,6 +54,8 @@ public class PostCreateView {
 					post.setTags(tags);
 
 					Millennium.datastore.save(post);
+					
+					return AdminPanelView.render(req, res, "Post criado com sucesso!");
 				}
 			}
 

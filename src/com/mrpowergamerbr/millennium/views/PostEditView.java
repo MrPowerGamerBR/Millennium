@@ -3,6 +3,7 @@ package com.mrpowergamerbr.millennium.views;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -29,8 +30,17 @@ public class PostEditView {
 
 			String slug = args[3];
 
+			if (req.queryParams("deletar") != null && req.queryParams("deletar").equals("YES")) {
+				Document doc = Millennium.client.getDatabase("millennium").getCollection("posts").find(Filters.eq("_id", new ObjectId(req.queryParams("postId")))).first();
 
-			System.out.println("What?");
+				if (doc != null) {
+					Post post = Millennium.datastore.get(Post.class, doc.get("_id"));
+
+					Millennium.datastore.delete(post);
+
+					return AdminPanelView.render(req, res, "Post deletado com sucesso!");
+				}
+			}
 
 			if (req.queryParams("title") != null) {
 				if (req.queryParams("postContent") != null) {
@@ -44,16 +54,26 @@ public class PostEditView {
 						if (post != null) {
 							post.setContent(req.queryParams("postContent"));
 							post.setTitle(req.queryParams("title"));
+							
+							String strTags = req.queryParams("tags");
+							String[] split = strTags.split(", ");
 
+							HashSet<String> tags = new HashSet<String>();
+
+							for (String tag : split) {
+								if (!tag.trim().isEmpty()) {
+									tags.add(tag.trim());
+								}
+							}
+
+							post.setTags(tags);
+							
 							Millennium.datastore.save(post);
 
-							System.out.println("Post atualizado!");
-						} else {
-							System.out.println("null");
+							return AdminPanelView.render(req, res, "Post atualizado!");
 						}
-					} else {
-						System.out.println("Triste a vida... documento não existe");
 					}
+					return AdminPanelView.render(req, res, "Post não existe!");
 				}
 			}
 
@@ -66,7 +86,7 @@ public class PostEditView {
 			}
 
 			context.put("tags", Millennium.getAllTags());
-			
+
 			PebbleTemplate template = Millennium.engine.getTemplate("postedit.html");
 
 			return new RenderWrapper(template, context);

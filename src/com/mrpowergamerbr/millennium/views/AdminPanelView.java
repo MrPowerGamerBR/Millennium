@@ -16,9 +16,15 @@ import spark.Session;
 
 public class AdminPanelView {
 	public static Object render(Request req, Response res) {
+		return render(req, res, null);
+	}
+
+	public static Object render(Request req, Response res, String message) {
 		try {
 			HashMap<String, Object> context = new HashMap<String, Object>();
-			
+
+			context.put("message", message);
+
 			Session session = req.session(true);
 
 			if (session.attribute("loggedInAs") != null) {
@@ -26,23 +32,26 @@ public class AdminPanelView {
 			} else {
 				return LoginPanelView.render(req, res);
 			}
-			
-			if (req.pathInfo().startsWith("/admin/login")) { // Debug
-				return LoginPanelView.render(req, res);
-			} else if (req.pathInfo().startsWith("/admin/createpost")) {
-				return PostCreateView.render(req, res);
-			} else if (req.pathInfo().startsWith("/admin/editpost")) {
-				return PostEditView.render(req, res);
+
+			if (message == null) { // Se a mensagem é diferente de null, ai nós redirecionamos para qualquer lugar necessário
+				// Se não verificar isso, vai dar StackOverflowException
+				if (req.pathInfo().startsWith("/admin/login")) { // Debug
+					return LoginPanelView.render(req, res);
+				} else if (req.pathInfo().startsWith("/admin/createpost")) {
+					return PostCreateView.render(req, res);
+				} else if (req.pathInfo().startsWith("/admin/editpost")) {
+					return PostEditView.render(req, res);
+				}
 			}
 			
 			long count = Millennium.client.getDatabase("millennium").getCollection("posts").count();
-			
+
 			context.put("postsPublicados", count);
-			
+
 			ArrayList<Post> posts = Millennium.getAllPosts();
-			
+
 			context.put("posts", posts);
-			
+
 			PebbleTemplate template = Millennium.engine.getTemplate("panel.html");
 
 			return new RenderWrapper(template, context);

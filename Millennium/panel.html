@@ -7,6 +7,11 @@
 | |  | | | | |  __/ | | | | | | | |_| | | | | | |
 |_|  |_|_|_|_|\___|_| |_|_| |_|_|\__,_|_| |_| |_|
 </pre>
+{# Isto é usado para mensagens ao criar/editar/deletar posts #}
+{# Caso não tenha acontecido nada, o padrão é "Normalizando Rede Social" #}
+<div class="alert alert-info" role="alert">
+{{ message | default("Normalizando Rede Social") }}
+</div>
 <p>Posts publicados: {{ postsPublicados }}</p>
 <a href="{{ websiteUrl }}admin/createpost">Criar novo post</a>
 <div class="everything">

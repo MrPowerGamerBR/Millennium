@@ -35,16 +35,18 @@ text-align: center;
 <div class="topBar">
 <input type="text" value="Olá Mundo!" placeholder="Isto não deve ficar vazio, sabia disso?" name="title"/>
 <input type="submit" value="Enviar"/>
+{% block morebuttons %}
+{% endblock %}
 </div>
 <div class="everything">
 <div class="widgetWrapper">
 Marcadores:
-<input id="marcadores" type="text" value="" placeholder="Isto não deve ficar vazio, sabia disso?" name="tags"/>
+<input id="marcadores" type="text" value="{% block marcadores %}{% endblock %}" placeholder="Isto não deve ficar vazio, sabia disso?" name="tags"/>
 
 <div class="marcadoresBox">
 {% for tag in tags %}
 {% if loop.index != 0 %}, {% endif %}
-<a onclick="addTag('{{ tag }}')">{{ tag }}</a>{% endfor %}
+<a onclick="addTag('{{ tag }}')" style="color: #1a0dab;">{{ tag }}</a>{% endfor %}
 </div>
 <script>
 function addTag(str) {

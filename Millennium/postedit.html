@@ -1,4 +1,12 @@
 {% extends "postcreate.html" %}
+{% block morebuttons %}
+<button name="deletar" type="submit" value="YES">Deletar Post</button>
+{% endblock %}
+{% block marcadores %}
+{% for tag in post.tags %}
+{% if loop.index != 0 %}, {% endif %}
+{{ tag }}{% endfor %}
+{% endblock %}
 {% block postwrapper %}
 <textarea id="demo1" name="postContent" style="display: none;">
 {{ post.content }}</textarea>
