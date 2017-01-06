@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.SplittableRandom;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
@@ -103,11 +104,15 @@ public class Millennium {
 	}
 	
 	public static ArrayList<Post> getAllPosts() {
+		return getAllPosts(Sorts.descending("date"));
+	}
+	
+	public static ArrayList<Post> getAllPosts(Bson sort) {
 		ArrayList<Post> posts = new ArrayList<Post>();
 		
 		FindIterable<Document> docs = Millennium.client.getDatabase("millennium").getCollection("posts").find();
 		
-		docs.sort(Sorts.descending("date"));
+		docs.sort(sort);
 		
 		for (Document doc : docs) {
 			Post post = Millennium.datastore.get(Post.class, doc.get("_id"));
