@@ -2,60 +2,23 @@ package com.mrpowergamerbr.millennium.utils.blog;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import org.bson.types.ObjectId;
 import org.jooby.Request;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Transient;
 
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.StrUtils;
 
-import lombok.*;
-
-@Getter
-@Setter
-@Entity(value = "posts", noClassnameStored = true)
-public class Post {
+@Entity(value = "globalviewcount", noClassnameStored = true)
+public class ViewCount {
 	@Id
-	public ObjectId id; // ID do post
-	
-	public ObjectId authorId; // ID do autor
-	
-	public String content; // Conteúdo
-	
-	public String title; // Título do post
-	
-	@Indexed
-	public String slug; // Slug
-	
-	@Indexed
-	public HashSet<String> tags = new HashSet<String>();
-	
-	public long date = System.currentTimeMillis(); // Data do post
-		
+	public ObjectId id;
 	public HashMap<String, Long> views = new HashMap<String, Long>();
 	
 	public HashMap<String, Long> viewCache = new HashMap<String, Long>();
-	
-	@Transient
-	public transient Author author;
-	
-	@Transient
-	public transient String htmlContent;
-	
-	@Transient
-	public transient String fancyDate;
-	
-	@Transient
-	public transient String smallDate;
-	
-	@Transient
-	public transient long viewCount = 0;
 	
 	public long getTotalViewCount() {
 		long viewCount = 0;

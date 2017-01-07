@@ -37,14 +37,7 @@ public class PostView {
 
 				context.put("post", Millennium.fillPost(post));
 
-				// Adicionar uma nova view somente se a última visualização foi a mais de 60m				
-				if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - post.getViewCache().getOrDefault(StrUtils.ip2mongo(req.header("X-Forwarded-For").value()), 0L)) > 60) {
-					post.getViewCache().put(StrUtils.ip2mongo(req.header("X-Forwarded-For").value()), System.currentTimeMillis());
-					
-					post.setViewCount(post.getViewCount() + 1);
-					
-					Millennium.datastore.save(post);
-				}
+				post.addOneMoreView(req);
 			} else {
 				return Error404View.render(req, res);
 			}

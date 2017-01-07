@@ -3,8 +3,6 @@ package com.mrpowergamerbr.millennium.views;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
-
 import org.bson.Document;
 import org.jooby.Request;
 import org.jooby.Response;
@@ -14,7 +12,6 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
-import com.mrpowergamerbr.millennium.utils.StrUtils;
 import com.mrpowergamerbr.millennium.utils.blog.Page;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 
@@ -38,14 +35,7 @@ public class PageView {
 
 				context.put("post", Millennium.fillPost(post));
 
-				// Adicionar uma nova view somente se a última visualização foi a mais de 60m				
-				if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - post.getViewCache().getOrDefault(StrUtils.ip2mongo(req.header("X-Forwarded-For").value()), 0L)) > 60) {
-					post.getViewCache().put(StrUtils.ip2mongo(req.header("X-Forwarded-For").value()), System.currentTimeMillis());
-					
-					post.setViewCount(post.getViewCount() + 1);
-					
-					Millennium.datastore.save(post);
-				}
+				post.addOneMoreView(req);
 			} else {
 				return Error404View.render(req, res);
 			}

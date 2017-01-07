@@ -121,6 +121,8 @@ public class Millennium extends Jooby {
 		String smallDate = DateUtils.addZeroIfNeeded(cal.get(Calendar.DAY_OF_MONTH)) + "/" + DateUtils.addZeroIfNeeded((cal.get(Calendar.MONTH) + 1)) + "/" + cal.get(Calendar.YEAR);
 		post.setSmallDate(smallDate);
 
+		post.setViewCount(post.getTotalViewCount());
+		
 		return post;
 	}
 
@@ -137,26 +139,7 @@ public class Millennium extends Jooby {
 
 		for (Document doc : docs) {
 			Post post = Millennium.datastore.get(Post.class, doc.get("_id"));
-
-			Parser parser = Parser.builder().build();
-			Node document = parser.parse(post.content);
-			HtmlRenderer renderer = HtmlRenderer.builder().build();
-			post.setHtmlContent(renderer.render(document));
-
-			Author author = Millennium.datastore.get(Author.class, post.getAuthorId());
-
-			post.setAuthor(author);
-
-			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(post.date);
-
-			String fancy = DateUtils.getFancyDay(cal.get(Calendar.DAY_OF_WEEK)) + ", " + DateUtils.addZeroIfNeeded(cal.get(Calendar.DAY_OF_MONTH)) + "/" + DateUtils.addZeroIfNeeded((cal.get(Calendar.MONTH) + 1)) + "/" + cal.get(Calendar.YEAR);
-			post.setFancyDate(fancy);
-
-			String smallDate = DateUtils.addZeroIfNeeded(cal.get(Calendar.DAY_OF_MONTH)) + "/" + DateUtils.addZeroIfNeeded((cal.get(Calendar.MONTH) + 1)) + "/" + cal.get(Calendar.YEAR);
-			post.setSmallDate(smallDate);
-
-			posts.add(post);
+			posts.add(fillPost(post));
 		}
 		return posts;
 	}

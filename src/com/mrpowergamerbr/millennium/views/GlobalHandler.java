@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bson.Document;
 import org.jooby.Request;
 import org.jooby.Response;
 
@@ -16,6 +17,7 @@ import com.mongodb.client.model.Sorts;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
+import com.mrpowergamerbr.millennium.utils.blog.ViewCount;
 
 public class GlobalHandler {
 
@@ -23,8 +25,15 @@ public class GlobalHandler {
 		String path = req.path();
 		Object render = null;
 
-		System.out.println(path);
-
+		Document doc = Millennium.client.getDatabase("millennium").getCollection("globalviewcount").find().first();
+		
+		if (doc != null) {
+			ViewCount vc = Millennium.datastore.get(ViewCount.class, doc.get("_id"));
+			vc.addOneMoreView(req);
+		} else {
+			ViewCount vc = new ViewCount();
+			vc.addOneMoreView(req);
+		}
 		HashMap<String, Object> defaultContext = new HashMap<String, Object>();
 
 		ArrayList<Post> posts = Millennium.getAllPosts(Sorts.descending("viewCount"));
@@ -33,6 +42,8 @@ public class GlobalHandler {
 		defaultContext.put("websiteUrl", Millennium.websiteUrl);
 		if (req.session().isSet("loggedInAs")) {
 			defaultContext.put("loggedInAs", req.session().get("loggedInAs").value());
+		} else {
+			defaultContext.put("loggedInAs", null);
 		}
 		
 		if (path.equalsIgnoreCase("/")) {
