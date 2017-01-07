@@ -42,7 +42,7 @@ public class LoginPanelView {
 			}
 			if (username != null && password != null) {
 				if (username.equals("logout")) {
-					session.set("loggedInAs", null);
+					session.destroy();
 				} else {
 					Document doc = Millennium.client
 							.getDatabase("millennium")
