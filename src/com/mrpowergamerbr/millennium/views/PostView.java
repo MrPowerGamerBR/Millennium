@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import org.bson.Document;
+import org.jooby.Request;
+import org.jooby.Response;
 
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
@@ -15,8 +17,6 @@ import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.StrUtils;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
-import spark.Request;
-import spark.Response;
 
 public class PostView {
 
@@ -24,7 +24,7 @@ public class PostView {
 		try {
 			HashMap<String, Object> context = new HashMap<String, Object>();
 
-			String[] args = req.pathInfo().split("/");
+			String[] args = req.path().split("/");
 			// args[0] = ""
 			// args[1] = "posts"
 			// args[2] = "slug"
@@ -39,8 +39,8 @@ public class PostView {
 				context.put("post", Millennium.fillPost(post));
 
 				// Adicionar uma nova view somente se a última visualização foi a mais de 60m				
-				if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - post.getViewCache().getOrDefault(StrUtils.ip2mongo(req.headers("X-Forwarded-For")), 0L)) > 60) {
-					post.getViewCache().put(StrUtils.ip2mongo(req.headers("X-Forwarded-For")), System.currentTimeMillis());
+				if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - post.getViewCache().getOrDefault(StrUtils.ip2mongo(req.header("X-Forwarded-For").value()), 0L)) > 60) {
+					post.getViewCache().put(StrUtils.ip2mongo(req.header("X-Forwarded-For").value()), System.currentTimeMillis());
 					
 					post.setViewCount(post.getViewCount() + 1);
 					

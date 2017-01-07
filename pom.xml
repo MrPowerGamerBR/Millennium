@@ -5,10 +5,23 @@
 	<artifactId>Millennium</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.jooby/jooby -->
 		<dependency>
-			<groupId>com.sparkjava</groupId>
-			<artifactId>spark-core</artifactId>
-			<version>2.5.4</version>
+			<groupId>org.jooby</groupId>
+			<artifactId>jooby</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jooby/jooby-netty -->
+		<dependency>
+			<groupId>org.jooby</groupId>
+			<artifactId>jooby-netty</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>21.0-rc1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb</groupId>

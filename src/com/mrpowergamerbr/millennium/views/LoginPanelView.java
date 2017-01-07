@@ -6,16 +6,15 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 
 import org.bson.Document;
+import org.jooby.Request;
+import org.jooby.Response;
+import org.jooby.Session;
 
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.blog.Author;
-
-import spark.Request;
-import spark.Response;
-import spark.Session;
 
 public class LoginPanelView {
 	public static Object render(Request req, Response res) {
@@ -24,11 +23,11 @@ public class LoginPanelView {
 
 			context.put("loginStatus", "WAITING");
 
-			Session session = req.session(true);
+			Session session = req.session();
 
 
-			if (session.attribute("loggedInAs") != null) {
-				context.put("loggedInAs", session.attribute("loggedInAs"));
+			if (session.get("loggedInAs").isSet()) {
+				context.put("loggedInAs", session.get("loggedInAs").value());
 			} else {
 				context.put("loggedInAs", null);
 			}
@@ -36,15 +35,15 @@ public class LoginPanelView {
 			String password = null;
 			String username = null;
 
-			if (req.queryParams("password") != null) {
-				password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(req.queryParams("password"));  
+			if (req.param("password").isSet()) {
+				password = org.apache.commons.codec.digest.DigestUtils.sha256Hex(req.param("password").value());  
 			}
-			if (req.queryParams("login") != null) {
-				username = req.queryParams("login");
+			if (req.param("login").isSet()) {
+				username = req.param("login").value();
 			}
 			if (username != null && password != null) {
 				if (username.equals("logout")) {
-					session.attribute("loggedInAs", null);
+					session.set("loggedInAs", null);
 				} else {
 					Document doc = Millennium.client
 							.getDatabase("millennium")
@@ -62,10 +61,15 @@ public class LoginPanelView {
 
 						context.put("loginStatus", "SUCCESS");
 
-						session.attribute("loggedInAs", author.authorName);
-						session.attribute("loggedInId", author.id);
+						session.set("loggedInAs", author.authorName);
+						session.set("loggedInId", author.id.toString());
 						
-						res.redirect(Millennium.websiteUrl + "admin");
+						try {
+							res.redirect(Millennium.websiteUrl + "admin");
+						} catch (Throwable e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					} else {
 						context.put("loginStatus", "FAIL");
 					}

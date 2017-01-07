@@ -7,6 +7,8 @@ import java.util.HashSet;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.jooby.Request;
+import org.jooby.Response;
 
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
@@ -15,15 +17,12 @@ import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.blog.Page;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 
-import spark.Request;
-import spark.Response;
-
 public class PageEditView {
 	public static Object render(Request req, Response res) {
 		try {
 			HashMap<String, Object> context = new HashMap<String, Object>();
 
-			String[] args = req.pathInfo().split("/");
+			String[] args = req.path().split("/");
 			// args[0] = ""
 			// args[1] = "admin"
 			// args[2] = "editpost"
@@ -31,8 +30,8 @@ public class PageEditView {
 
 			String slug = args[3];
 
-			if (req.queryParams("deletar") != null && req.queryParams("deletar").equals("YES")) {
-				Document doc = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("_id", new ObjectId(req.queryParams("postId")))).first();
+			if (req.param("deletar").isSet() && req.param("deletar").value().equals("YES")) {
+				Document doc = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("_id", new ObjectId(req.param("postId").value()))).first();
 
 				if (doc != null) {
 					Post post = Millennium.datastore.get(Post.class, doc.get("_id"));
@@ -43,20 +42,20 @@ public class PageEditView {
 				}
 			}
 
-			if (req.queryParams("title") != null) {
-				if (req.queryParams("postContent") != null) {
-					System.out.println("Getting from the database... " + req.queryParams("postId"));
+			if (req.get("title") != null) {
+				if (req.param("postContent") != null) {
+					System.out.println("Getting from the database... " + req.param("postId").value());
 
-					Document doc = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("_id", new ObjectId(req.queryParams("postId")))).first();
+					Document doc = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("_id", new ObjectId(req.param("postId").value()))).first();
 
 					if (doc != null) {
 						Post post = Millennium.datastore.get(Page.class, doc.get("_id"));
 
 						if (post != null) {
-							post.setContent(req.queryParams("postContent"));
-							post.setTitle(req.queryParams("title"));
+							post.setContent(req.param("postContent").value());
+							post.setTitle(req.param("title").value());
 							
-							String strTags = req.queryParams("tags");
+							String strTags = req.param("tags").value();
 							String[] split = strTags.split(", ");
 
 							HashSet<String> tags = new HashSet<String>();

@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.naming.Context;
+import org.jooby.Request;
+import org.jooby.Response;
 
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
@@ -16,14 +17,13 @@ import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 
-import spark.Request;
-import spark.Response;
-
 public class GlobalHandler {
 
-	public static Object render(Request req, Response res) {
-		String path = req.pathInfo();
+	public static String render(Request req, Response res) {
+		String path = req.path();
 		Object render = null;
+
+		System.out.println(path);
 		
 		HashMap<String, Object> defaultContext = new HashMap<String, Object>();
 
@@ -87,7 +87,6 @@ public class GlobalHandler {
 			}
 
 			output = writer.toString();
-			res.body(output);
 			return output;
 		} else {
 			return (String)render;

@@ -5,14 +5,14 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jooby.Request;
+import org.jooby.Response;
+import org.jooby.Session;
+
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
-
-import spark.Request;
-import spark.Response;
-import spark.Session;
 
 public class AdminPanelView {
 	public static Object render(Request req, Response res) {
@@ -25,25 +25,25 @@ public class AdminPanelView {
 
 			context.put("message", message);
 
-			Session session = req.session(true);
+			Session session = req.session();
 
-			if (session.attribute("loggedInAs") != null) {
-				context.put("loggedInAs", session.attribute("loggedInAs"));
+			if (session.get("loggedInAs").isSet()) {
+				context.put("loggedInAs", session.get("loggedInAs").value());
 			} else {
 				return LoginPanelView.render(req, res);
 			}
 
 			if (message == null) { // Se a mensagem é diferente de null, ai nós redirecionamos para qualquer lugar necessário
 				// Se não verificar isso, vai dar StackOverflowException
-				if (req.pathInfo().startsWith("/admin/login")) { // Debug
+				if (req.path().startsWith("/admin/login")) { // Debug
 					return LoginPanelView.render(req, res);
-				} else if (req.pathInfo().startsWith("/admin/createpost")) {
+				} else if (req.path().startsWith("/admin/createpost")) {
 					return PostCreateView.render(req, res);
-				} else if (req.pathInfo().startsWith("/admin/editpost")) {
+				} else if (req.path().startsWith("/admin/editpost")) {
 					return PostEditView.render(req, res);
-				} else if (req.pathInfo().startsWith("/admin/createpage")) {
+				} else if (req.path().startsWith("/admin/createpage")) {
 					return PageCreateView.render(req, res);
-				} else if (req.pathInfo().startsWith("/admin/editpage")) {
+				} else if (req.path().startsWith("/admin/editpage")) {
 					return PageEditView.render(req, res);
 				}
 			}

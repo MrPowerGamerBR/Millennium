@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
+import org.bson.types.ObjectId;
+import org.jooby.Request;
+import org.jooby.Response;
+
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
 import com.mrpowergamerbr.millennium.Millennium;
@@ -13,20 +17,17 @@ import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.blog.Page;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 
-import spark.Request;
-import spark.Response;
-
 public class PageCreateView {
 	public static Object render(Request req, Response res) {
 		try {
 			HashMap<String, Object> context = new HashMap<String, Object>();
 
-			if (req.queryParams("title") != null) {
-				if (req.queryParams("postContent") != null) {
+			if (req.param("title").isSet()) {
+				if (req.param("postContent").isSet()) {
 					Post post = new Page();
-					post.authorId = req.session().attribute("loggedInId");
-					post.content = req.queryParams("postContent");
-					post.slug = Millennium.slg.slugify(req.queryParams("title"));
+					post.authorId = new ObjectId(req.session().get("loggedInId").value());
+					post.content = req.get("postContent");
+					post.slug = Millennium.slg.slugify(req.param("title").value());
 					boolean sameSlug = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("slug", post.getSlug())).first() != null;
 
 					int idx = 0;
@@ -39,9 +40,9 @@ public class PageCreateView {
 						sameSlug = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("slug", post.getSlug())).first() != null;
 						idx++;
 					}
-					post.title = req.queryParams("title");
+					post.title = req.param("title").value();
 
-					String strTags = req.queryParams("tags");
+					String strTags = req.param("tags").value();
 					String[] split = strTags.split(", ");
 
 					HashSet<String> tags = new HashSet<String>();
