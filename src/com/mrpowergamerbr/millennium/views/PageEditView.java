@@ -83,6 +83,8 @@ public class PageEditView {
 				Post post = Millennium.datastore.get(Page.class, doc.get("_id"));
 
 				context.put("post", post);
+			} else {
+				return AdminPanelView.render(req, res, "Página não existe!");
 			}
 
 			context.put("tags", Millennium.getAllTags());

@@ -82,6 +82,8 @@ public class PostEditView {
 				Post post = Millennium.datastore.get(Post.class, doc.get("_id"));
 
 				context.put("post", post);
+			} else {
+				return AdminPanelView.render(req, res, "Post não existe!");
 			}
 
 			context.put("tags", Millennium.getAllTags());
