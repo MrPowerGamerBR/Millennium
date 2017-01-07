@@ -26,7 +26,7 @@ public class PageCreateView {
 				if (req.param("postContent").isSet()) {
 					Post post = new Page();
 					post.authorId = new ObjectId(req.session().get("loggedInId").value());
-					post.content = req.get("postContent");
+					post.content = req.param("postContent").value();
 					post.slug = Millennium.slg.slugify(req.param("title").value());
 					boolean sameSlug = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("slug", post.getSlug())).first() != null;
 
