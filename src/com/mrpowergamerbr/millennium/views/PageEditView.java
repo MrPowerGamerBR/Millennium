@@ -38,7 +38,7 @@ public class PageEditView {
 
 					Millennium.datastore.delete(post);
 
-					return AdminPanelView.render(req, res, "Post deletado com sucesso!");
+					return AdminPanelView.render(req, res, "Página deletado com sucesso!");
 				}
 			}
 
