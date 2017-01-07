@@ -47,7 +47,7 @@ public class PageView {
 					Millennium.datastore.save(post);
 				}
 			} else {
-
+				return Error404View.render(req, res);
 			}
 
 			PebbleTemplate template = Millennium.engine.getTemplate("post.html");
