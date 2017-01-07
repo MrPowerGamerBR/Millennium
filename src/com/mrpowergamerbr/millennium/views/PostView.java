@@ -2,7 +2,6 @@ package com.mrpowergamerbr.millennium.views;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
