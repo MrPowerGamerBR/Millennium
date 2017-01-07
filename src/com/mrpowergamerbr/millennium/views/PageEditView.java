@@ -42,8 +42,8 @@ public class PageEditView {
 				}
 			}
 
-			if (req.get("title") != null) {
-				if (req.param("postContent") != null) {
+			if (req.param("title").isSet()) {
+				if (req.param("postContent").isSet()) {
 					System.out.println("Getting from the database... " + req.param("postId").value());
 
 					Document doc = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("_id", new ObjectId(req.param("postId").value()))).first();
