@@ -34,7 +34,7 @@ public class PageEditView {
 				Document doc = Millennium.client.getDatabase("millennium").getCollection("pages").find(Filters.eq("_id", new ObjectId(req.param("postId").value()))).first();
 
 				if (doc != null) {
-					Post post = Millennium.datastore.get(Post.class, doc.get("_id"));
+					Post post = Millennium.datastore.get(Page.class, doc.get("_id"));
 
 					Millennium.datastore.delete(post);
 
