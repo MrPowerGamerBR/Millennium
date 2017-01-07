@@ -29,7 +29,7 @@ public class PostEditView {
 
 			String slug = args[3];
 
-			if (req.param("deletar").isSet() && req.param("deletar").equals("YES")) {
+			if (req.param("deletar").isSet() && req.param("deletar").value().equals("YES")) {
 				Document doc = Millennium.client.getDatabase("millennium").getCollection("posts").find(Filters.eq("_id", new ObjectId(req.param("postId").value()))).first();
 
 				if (doc != null) {
