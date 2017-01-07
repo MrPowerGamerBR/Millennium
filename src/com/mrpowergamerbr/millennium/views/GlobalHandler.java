@@ -24,13 +24,16 @@ public class GlobalHandler {
 		Object render = null;
 
 		System.out.println(path);
-		
+
 		HashMap<String, Object> defaultContext = new HashMap<String, Object>();
 
 		ArrayList<Post> posts = Millennium.getAllPosts(Sorts.descending("viewCount"));
-		
+
 		defaultContext.put("allTimePosts", posts);
 		defaultContext.put("websiteUrl", Millennium.websiteUrl);
+		if (req.session().isSet("loggedInAs")) {
+			defaultContext.put("loggedInAs", req.session().get("loggedInAs").value());
+		}
 		
 		if (path.equalsIgnoreCase("/")) {
 			render = HomeView.render(req, res);
@@ -41,17 +44,17 @@ public class GlobalHandler {
 		} else if (path.startsWith("/pages")) {
 			render = PageView.render(req, res);
 		}
-		
+
 		PebbleTemplate compiledTemplate;
 		StringWriter writer;
 		String output;
-		
+
 		if(render instanceof RenderWrapper) {
 			try {
 				Map<String, Object> context = ((RenderWrapper)render).context;
-				
+
 				defaultContext.putAll(context);
-				
+
 				compiledTemplate = ((RenderWrapper)render).pebble;
 				writer = new StringWriter();
 				compiledTemplate.evaluate(writer, defaultContext);
@@ -67,7 +70,7 @@ public class GlobalHandler {
 			HashMap<String, Object> context = new HashMap<String, Object>();
 
 			defaultContext.putAll(context);
-			
+
 			compiledTemplate = null;
 
 			try {
