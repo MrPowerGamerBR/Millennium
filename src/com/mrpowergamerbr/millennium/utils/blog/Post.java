@@ -1,8 +1,10 @@
 package com.mrpowergamerbr.millennium.utils.blog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.bson.types.ObjectId;
@@ -66,13 +68,27 @@ public class Post {
 	}
 	
 	public void addOneMoreView(Request req) {
+		Calendar cal = Calendar.getInstance();
+		String today = (Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
+		
+		// Limpar as views velhas
+		ArrayList<String> toRemove = new ArrayList<String>();
+		for (Entry<String, Long> entry : viewCache.entrySet()) {
+			if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - entry.getValue()) > 60) {
+				toRemove.add(entry.getKey());
+			}
+		}
+		
+		for (String str : toRemove) {
+			viewCache.remove(str);
+		}
+		
 		if (TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - viewCache.getOrDefault(StrUtils.ip2mongo(req.header("X-Forwarded-For").value()), 0L)) > 60) {
 			viewCache.put(StrUtils.ip2mongo(req.header("X-Forwarded-For").value()), System.currentTimeMillis());
 			
-			Calendar cal = Calendar.getInstance();
-			views.put(cal.get(Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR), views.getOrDefault(cal.get(Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR), 0L) + 1L);
 			
-			Millennium.datastore.save(this);
+			views.put(today, views.getOrDefault(today, 0L) + 1L);
 		}
+		Millennium.datastore.save(this);
 	}
 }
