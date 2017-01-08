@@ -59,6 +59,12 @@ public class Post {
 	@Transient
 	public transient long viewCount = 0;
 	
+	@Transient
+	public transient String preview = null;
+	
+	@Transient
+	public transient boolean readMore = false;
+	
 	public long getTotalViewCount() {
 		long viewCount = 0;
 		for (Long l : views.values()) {

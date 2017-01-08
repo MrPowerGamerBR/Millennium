@@ -106,8 +106,13 @@ public class Millennium extends Jooby {
 		Parser parser = Parser.builder().build();
 		Node document = parser.parse(post.content);
 		HtmlRenderer renderer = HtmlRenderer.builder().build();
-		post.setHtmlContent(renderer.render(document));
-
+		
+		String content = renderer.render(document);
+		
+		post.setHtmlContent(content);
+		post.setPreview(content.split("<!--more-->")[0]);
+		post.setReadMore(content.contains("<!--more-->"));
+		
 		Author author = Millennium.datastore.get(Author.class, post.getAuthorId());
 
 		post.setAuthor(author);
