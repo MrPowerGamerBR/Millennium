@@ -12,6 +12,7 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Filters;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
+import com.mrpowergamerbr.millennium.utils.blog.Page;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 
 public class PostView {
@@ -31,7 +32,9 @@ public class PostView {
 				Document doc = Millennium.client.getDatabase("millennium").getCollection(isPage ? "pages" : "posts").find(Filters.eq("slug", slug)).first();
 
 				if (doc != null) {
-					Post post = Millennium.datastore.get(Post.class, doc.get("_id"));
+					Class<?> clazz = (isPage ? Page.class : Post.class);
+					
+					Post post = (Post) Millennium.datastore.get(clazz, doc.get("_id"));
 
 					context.put("post", Millennium.fillPost(post));
 
