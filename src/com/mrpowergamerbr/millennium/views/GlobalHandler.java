@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,6 +21,7 @@ import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Sorts;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.DateAndViews;
+import com.mrpowergamerbr.millennium.utils.DateUtils;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.StrUtils;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
@@ -30,6 +33,16 @@ public class GlobalHandler {
 		String path = req.path();
 		Object render = null;
 
+		if (path.startsWith("/droidtale")) {
+			try {
+				res.redirect("http://droidtale.mrpowergamerbr.com");
+				return "Redirecting...";
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		Document doc = Millennium.client.getDatabase("millennium").getCollection("globalviewcount").find().first();
 		
 		ViewCount vc = null;
@@ -49,10 +62,18 @@ public class GlobalHandler {
 			matcher.find();
 			
 			Calendar cal = Calendar.getInstance();
-			cal.set(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+			cal.set(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(2)) - 1, Integer.parseInt(matcher.group(1)));
 			DateAndViews dav = new DateAndViews(entry.getValue(), cal);
+			dav.setFancyDate(DateUtils.addZeroIfNeeded(matcher.group(1)) + "/" + DateUtils.addZeroIfNeeded(matcher.group(2)) + "/" + DateUtils.addZeroIfNeeded(matcher.group(3)));
 			dateAndViews.add(dav);
 		}
+		
+		Collections.sort(dateAndViews, new Comparator<DateAndViews>() {
+			@Override
+			public int compare(DateAndViews o1, DateAndViews o2) {
+				return o1.getCalendar().compareTo(o2.getCalendar());
+			}
+		});
 		
 		HashMap<String, Object> defaultContext = new HashMap<String, Object>();
 
