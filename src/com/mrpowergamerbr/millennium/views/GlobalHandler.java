@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
 
 import org.bson.Document;
 import org.jooby.Request;
@@ -15,7 +18,9 @@ import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import com.mongodb.client.model.Sorts;
 import com.mrpowergamerbr.millennium.Millennium;
+import com.mrpowergamerbr.millennium.utils.DateAndViews;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
+import com.mrpowergamerbr.millennium.utils.StrUtils;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 import com.mrpowergamerbr.millennium.utils.blog.ViewCount;
 
@@ -27,18 +32,34 @@ public class GlobalHandler {
 
 		Document doc = Millennium.client.getDatabase("millennium").getCollection("globalviewcount").find().first();
 		
+		ViewCount vc = null;
 		if (doc != null) {
-			ViewCount vc = Millennium.datastore.get(ViewCount.class, doc.get("_id"));
+			vc = Millennium.datastore.get(ViewCount.class, doc.get("_id"));
 			vc.addOneMoreView(req);
 		} else {
-			ViewCount vc = new ViewCount();
+			vc = new ViewCount();
 			vc.addOneMoreView(req);
 		}
+		
+		ArrayList<DateAndViews> dateAndViews = new ArrayList<DateAndViews>();
+		
+		for (Entry<String, Long> entry : vc.views.entrySet()) {
+			// RegEx!
+			Matcher matcher = StrUtils.datePatt.matcher(entry.getKey());
+			matcher.find();
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+			DateAndViews dav = new DateAndViews(entry.getValue(), cal);
+			dateAndViews.add(dav);
+		}
+		
 		HashMap<String, Object> defaultContext = new HashMap<String, Object>();
 
 		ArrayList<Post> posts = Millennium.getAllPosts(Sorts.descending("viewCount"));
 
 		defaultContext.put("allTimePosts", posts);
+		defaultContext.put("viewCounts", dateAndViews);
 		defaultContext.put("websiteUrl", Millennium.websiteUrl);
 		if (req.session().isSet("loggedInAs")) {
 			defaultContext.put("loggedInAs", req.session().get("loggedInAs").value());
