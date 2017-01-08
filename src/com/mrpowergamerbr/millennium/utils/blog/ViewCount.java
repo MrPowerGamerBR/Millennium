@@ -32,7 +32,7 @@ public class ViewCount {
 	
 	public void addOneMoreView(Request req) {
 		Calendar cal = Calendar.getInstance();
-		String today = (Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
+		String today = cal.get(Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
 		
 		// Limpar as views velhas
 		ArrayList<String> toRemove = new ArrayList<String>();
