@@ -10,6 +10,7 @@ import java.util.SplittableRandom;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.jooby.Jooby;
+import org.jsoup.Jsoup;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
@@ -112,6 +113,7 @@ public class Millennium extends Jooby {
 		post.setHtmlContent(content);
 		post.setPreview(content.split("<!--more-->")[0]);
 		post.setReadMore(content.contains("<!--more-->"));
+		post.setClean(Jsoup.parse(content).text());
 		
 		Author author = Millennium.datastore.get(Author.class, post.getAuthorId());
 
