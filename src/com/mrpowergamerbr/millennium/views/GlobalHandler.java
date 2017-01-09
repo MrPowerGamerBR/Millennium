@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -92,7 +93,7 @@ public class GlobalHandler {
 		defaultContext.put("websiteUrl", Millennium.websiteUrl);
 		defaultContext.put("locale", LocaleFactory.getLocale(req.locale().getDisplayLanguage()));
 		
-		ArrayList<String> locales = new ArrayList<String>();
+		HashSet<String> locales = new HashSet<String>();
 		for (Locale locale : Locale.getAvailableLocales()) {
 			locales.add(locale.getDisplayLanguage());
 		}
