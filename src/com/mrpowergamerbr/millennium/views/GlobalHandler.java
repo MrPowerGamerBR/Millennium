@@ -18,7 +18,6 @@ import org.jooby.Response;
 
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
-import com.mongodb.client.model.Sorts;
 import com.mrpowergamerbr.millennium.Millennium;
 import com.mrpowergamerbr.millennium.utils.DateAndViews;
 import com.mrpowergamerbr.millennium.utils.DateUtils;
@@ -89,6 +88,7 @@ public class GlobalHandler {
 		defaultContext.put("allTimePosts", posts);
 		defaultContext.put("viewCounts", dateAndViews);
 		defaultContext.put("websiteUrl", Millennium.websiteUrl);
+		defaultContext.put("locale", req.locale().getDisplayLanguage());
 		if (req.session().isSet("loggedInAs")) {
 			defaultContext.put("loggedInAs", req.session().get("loggedInAs").value());
 		} else {
