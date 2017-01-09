@@ -25,6 +25,7 @@ import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.StrUtils;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 import com.mrpowergamerbr.millennium.utils.blog.ViewCount;
+import com.mrpowergamerbr.millennium.utils.locale.LocaleFactory;
 
 public class GlobalHandler {
 
@@ -88,7 +89,8 @@ public class GlobalHandler {
 		defaultContext.put("allTimePosts", posts);
 		defaultContext.put("viewCounts", dateAndViews);
 		defaultContext.put("websiteUrl", Millennium.websiteUrl);
-		defaultContext.put("locale", req.locale().getDisplayLanguage());
+		defaultContext.put("locale", LocaleFactory.getLocale(req.locale().getDisplayLanguage()));
+
 		if (req.session().isSet("loggedInAs")) {
 			defaultContext.put("loggedInAs", req.session().get("loggedInAs").value());
 		} else {
