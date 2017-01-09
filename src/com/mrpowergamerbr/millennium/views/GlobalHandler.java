@@ -77,8 +77,15 @@ public class GlobalHandler {
 		
 		HashMap<String, Object> defaultContext = new HashMap<String, Object>();
 
-		ArrayList<Post> posts = Millennium.getAllPosts(Sorts.descending("viewCount"));
+		ArrayList<Post> posts = Millennium.getAllPosts();
 
+		posts.sort(new Comparator<Post>() {
+			@Override
+			public int compare(Post o1, Post o2) {
+				return ((Long) o2.viewCount).compareTo(o1.viewCount);
+			}
+		});
+		
 		defaultContext.put("allTimePosts", posts);
 		defaultContext.put("viewCounts", dateAndViews);
 		defaultContext.put("websiteUrl", Millennium.websiteUrl);
