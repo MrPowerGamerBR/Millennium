@@ -44,6 +44,9 @@ public class Post {
 	
 	public HashMap<String, Long> viewCache = new HashMap<String, Long>();
 	
+	public HashMap<String, String> altContent = new HashMap<String, String>(); // Locale
+	public HashMap<String, String> altTitle = new HashMap<String, String>(); // Locale
+	
 	@Transient
 	public transient Author author;
 	

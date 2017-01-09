@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -90,7 +91,13 @@ public class GlobalHandler {
 		defaultContext.put("viewCounts", dateAndViews);
 		defaultContext.put("websiteUrl", Millennium.websiteUrl);
 		defaultContext.put("locale", LocaleFactory.getLocale(req.locale().getDisplayLanguage()));
-
+		
+		ArrayList<String> locales = new ArrayList<String>();
+		for (Locale locale : Locale.getAvailableLocales()) {
+			locales.add(locale.getDisplayLanguage());
+		}
+		defaultContext.put("locales", locales);
+		
 		if (req.session().isSet("loggedInAs")) {
 			defaultContext.put("loggedInAs", req.session().get("loggedInAs").value());
 		} else {
