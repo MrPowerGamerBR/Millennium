@@ -45,8 +45,8 @@ public class Millennium extends Jooby {
 	{		
 		port(4568);
 		assets("/**", Paths.get(rootFolder + "static/"));
-		get("/**", (req, res) -> res.send(GlobalHandler.render(req, res)));
-		post("/**", (req, res) -> res.send(GlobalHandler.render(req, res)));
+		get("/**", (req, res) -> GlobalHandler.render(req, res));
+		post("/**", (req, res) -> GlobalHandler.render(req, res));
 	}
 	
 	public static void main(String[] args) {

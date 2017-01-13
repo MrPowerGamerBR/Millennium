@@ -25,24 +25,30 @@ import com.mrpowergamerbr.millennium.utils.DateAndViews;
 import com.mrpowergamerbr.millennium.utils.DateUtils;
 import com.mrpowergamerbr.millennium.utils.RenderWrapper;
 import com.mrpowergamerbr.millennium.utils.StrUtils;
+import com.mrpowergamerbr.millennium.utils.TretaNewsGenerator;
 import com.mrpowergamerbr.millennium.utils.blog.Post;
 import com.mrpowergamerbr.millennium.utils.blog.ViewCount;
 import com.mrpowergamerbr.millennium.utils.locale.LocaleFactory;
 
 public class GlobalHandler {
 
-	public static String render(Request req, Response res) {
+	public static void render(Request req, Response res) {
 		String path = req.path();
 		Object render = null;
 
 		if (path.startsWith("/droidtale")) {
 			try {
 				res.redirect("http://droidtale.mrpowergamerbr.com");
-				return "Redirecting...";
+				res.send("Redirecting...");
 			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		
+		if (path.startsWith("/tretanews")) {
+			render = TretaNewsGenerator.generate(req, res);
+			return;
 		}
 		
 		Document doc = Millennium.client.getDatabase("millennium").getCollection("globalviewcount").find().first();
@@ -129,12 +135,23 @@ public class GlobalHandler {
 				writer = new StringWriter();
 				compiledTemplate.evaluate(writer, defaultContext);
 				output = writer.toString();
-				return output;
+				try {
+					res.send(output);
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return;
 			} catch (Exception var11) {
 				StringWriter db1 = new StringWriter();
 				PrintWriter coll1 = new PrintWriter(db1);
 				var11.printStackTrace(coll1);
-				return db1.toString();
+				try {
+					res.send(db1.toString());
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		} else if(render == null) {
 			HashMap<String, Object> context = new HashMap<String, Object>();
@@ -160,9 +177,19 @@ public class GlobalHandler {
 			}
 
 			output = writer.toString();
-			return output;
+			try {
+				res.send(output);
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
-			return (String)render;
+			try {
+				res.send(render);
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
